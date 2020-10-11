@@ -10,13 +10,15 @@ const useStyles = makeStyles({
     }
 });
 
-export default function Form({showWeather, onChange, value}) {
+const Form = ({showWeather, onChange, value}) => {
     const classes = useStyles();
     return (
-        <form className={classes.root} noValidate autoComplete="off" onSubmit={showWeather} >
+        <form className={classes.root} noValidate autoComplete="off" onSubmit={showWeather}>
             <Input onChangeInput={onChange} valueInput={value}/>
             <br/>
             <Button show={showWeather}/>
         </form>
     );
-}
+};
+
+export default Form;

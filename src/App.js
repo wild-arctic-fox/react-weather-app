@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import './App.css';
 import ImgMediaCard from './components/card/card';
 import Form from "./components/form-elements/form";
+import {fetchCities, fetchMatchedCities} from "./fech/fetchCities";
+import {fetchWeather} from "./fech/fetchWeather";
 import {API_KEY} from "./constants/config";
+import './App.css';
 
-function App() {
+const App = () => {
     ////////////////////////////////////////////////////////////////
     // States
     const [data, setData] = useState([]); // weather
@@ -20,41 +22,34 @@ function App() {
     ////////////////////////////////////////////////////////////////
     // По принципу componentDidMount и componentDidUpdate:
     // get cities & weather
-    useEffect(async () => {
-        try {
-            ////////////////////////////////////////////////////////////////
-            // Get cities
-            const response = await fetch(
-                'https://parseapi.back4app.com/classes/City?limit=30&keys=name,cityId',
-                {
-                    headers: {
-                        'X-Parse-Application-Id': 'mxsebv4KoWIGkRntXwyzg6c6DhKWQuit8Ry9sHja', // This is the fake app's application id
-                        'X-Parse-Master-Key': 'TpO0j3lG2PmEVMXlKYQACoOXKQrL3lwM0HwR9dbH', // This is the fake app's readonly master key
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                ////////////////////////////////////////////////////////////////
+                // Get cities
+                const cities = await fetchCities('https://parseapi.back4app.com/classes/City?limit=30&keys=name,cityId');
+
+                ////////////////////////////////////////////////////////////////
+                // Get weather
+                const result = [];
+                for (let i = 0; i < cities.length; i++) {
+                    const resJson = await fetchWeather(`https://api.openweathermap.org/data/2.5/weather?q=${cities[i].name}&appid=${API_KEY}&units=metric`);
+                    if (resJson.cod !== '404') {
+                        result.push(resJson);
                     }
                 }
-            );
-            const dataCities = await response.json(); // Here you have the data that you need
-            const cities = dataCities.results;
-
-            ////////////////////////////////////////////////////////////////
-            // Get weather
-            const result = [];
-            for (let i = 0; i < cities.length; i++) {
-                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cities[i].name}&appid=${API_KEY}&units=metric`);
-                const resJson = await res.json();
-                if (resJson.cod !== '404') {
-                    result.push(resJson);
-                }
+                // set state
+                setData(result);
+            } catch (e) {
+                console.log(e);
             }
-            // set state
-            setData(result);
-        } catch (e) {
-            console.log(e);
         }
+
+        fetchData();
     }, []);
 
-    let cards = data.map((item) => {
-        return (<ImgMediaCard cityName={item.name} temp={item.main.temp} windSpeed={item.wind.speed}/>)
+    const cards = data.map((item) => {
+        return (<ImgMediaCard key={item.name} cityName={item.name} temp={item.main.temp} windSpeed={item.wind.speed}/>)
     });
 
     ////////////////////////////////////////////////////////////////
@@ -65,32 +60,13 @@ function App() {
 
         ////////////////////////////////////////////////////////////////
         // Get cities
-        const where = encodeURIComponent(JSON.stringify({
-            "name": {
-                "$regex": `^${reg}*`
-            },
-            "population": {
-                "$gt": 100000
-            }
-        }));
-        const response = await fetch(
-            `https://parseapi.back4app.com/classes/City?count=1&limit=10&order=name&keys=name,cityId&where=${where}`,
-            {
-                headers: {
-                    'X-Parse-Application-Id': 'mxsebv4KoWIGkRntXwyzg6c6DhKWQuit8Ry9sHja', // This is the fake app's application id
-                    'X-Parse-Master-Key': 'TpO0j3lG2PmEVMXlKYQACoOXKQrL3lwM0HwR9dbH', // This is the fake app's readonly master key
-                }
-            }
-        );
-        const dataCities = await response.json(); // Here you have the data that you need
-        const cities = dataCities.results;
+        const cities = await fetchMatchedCities(reg);
 
         ////////////////////////////////////////////////////////////////
         // Get weather
         const result = [];
         for (let i = 0; i < cities.length; i++) {
-            const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cities[i].name}&appid=${API_KEY}&units=metric`);
-            const resJson = await res.json();
+            const resJson = await fetchWeather(`https://api.openweathermap.org/data/2.5/weather?q=${cities[i].name}&appid=${API_KEY}&units=metric`);
             if (resJson.cod !== '404') {
                 result.push(resJson);
             }
@@ -111,6 +87,6 @@ function App() {
             </div>
         </div>
     );
-}
+};
 
 export default App;

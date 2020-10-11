@@ -2,25 +2,8 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import {currencies} from '../../constants/config';
 
-const currencies = [
-    {
-        value: 'USD',
-        label: '$',
-    },
-    {
-        value: 'EUR',
-        label: '€',
-    },
-    {
-        value: 'BTC',
-        label: '฿',
-    },
-    {
-        value: 'JPY',
-        label: '¥',
-    },
-];
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,17 +14,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MultilineTextFields() {
-    const classes = useStyles();
-    const [currency, setCurrency] = React.useState('EUR');
+ const MultilineTextFields = () => {
+     const classes = useStyles();
+     const [currency, setCurrency] = React.useState('EUR');
 
-    const handleChange = (event) => {
-        setCurrency(event.target.value);
-    };
+     const handleChange = (event) => {
+         setCurrency(event.target.value);
+     };
 
-    return (
-        <div className={classes.root}>
-            <div>
+     return (
+         <div className={classes.root}>
+             <div>
                 <TextField
                     id="standard-select-currency"
                     select
@@ -59,4 +42,6 @@ export default function MultilineTextFields() {
             </div>
         </div>
     );
-}
+};
+
+export default MultilineTextFields;

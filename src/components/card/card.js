@@ -12,9 +12,12 @@ const useStyles = makeStyles({
     root: {
         maxWidth: 345,
     },
+    button_more: {
+        backgroundColor: "#123360"
+    },
 });
 
-export default function ImgMediaCard({cityName, windSpeed, temp}) {
+const ImgMediaCard = ({cityName, windSpeed, temp}) => {
     const classes = useStyles();
 
     let img;
@@ -51,13 +54,15 @@ export default function ImgMediaCard({cityName, windSpeed, temp}) {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary">
+                <Button size="medium" disabled variant="contained">
                     Share
                 </Button>
-                <Button size="small" color="primary">
-                    Learn More
+                <Button variant="contained" color="secondary" size="medium" className={classes.button_more}>
+                    More
                 </Button>
             </CardActions>
         </Card>
     );
-}
+};
+
+export default ImgMediaCard;

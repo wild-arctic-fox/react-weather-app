@@ -2,10 +2,12 @@ import React from 'react';
 import Button from "@material-ui/core/Button";
 
 
-export default function Input() {
+const CustomButton = () => {
     return (
         <Button variant="contained" color="primary" type='submit'>
             Apply
         </Button>
     );
-}
+};
+
+export default CustomButton;

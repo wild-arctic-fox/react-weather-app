@@ -17,7 +17,6 @@ const Main = () => {
         setInputValue(val.target.value);
     };
 
-
     ////////////////////////////////////////////////////////////////
     // По принципу componentDidMount и componentDidUpdate:
     // get cities & weather
@@ -82,7 +81,10 @@ const Main = () => {
             <h1>Weather</h1>
             <Form showWeather={getParticularWeather} value={inputValue} onChange={valueChangeHandler}/>
             <div className="box">
-                {cards}
+                {data.map((item) => {
+                    return (<ImgMediaCard key={item.name} cityName={item.name} temp={item.main.temp}
+                                          windSpeed={item.wind.speed}/>)
+                })}
             </div>
         </div>
     );

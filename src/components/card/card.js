@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 
 const ImgMediaCard = ({cityName, windSpeed, temp}) => {
     const classes = useStyles();
-    let history = useHistory();
+    const history = useHistory();
 
     let img;
     if (+temp >= 30) {

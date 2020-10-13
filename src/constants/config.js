@@ -17,3 +17,5 @@ export const currencies = [
         label: '¥',
     },
 ];
+
+export const ROUTES = {ROOT: "/", FORECAST: "/forecast/:city"};

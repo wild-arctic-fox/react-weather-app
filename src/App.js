@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Main from "./components/container/Main";
 import Forecast from './components/forecast/forecast';
 import './App.css';
+import {ROUTES} from "./constants/config";
 
 
 const App = () => {
@@ -14,8 +15,8 @@ const App = () => {
         <div className="App">
             <BrowserRouter>
                 <Switch>
-                    <Route path="/" component={Main} exact />
-                    <Route path="/forecast/:city" component={Forecast}/>
+                    <Route path={ROUTES.ROOT} component={Main} exact/>
+                    <Route path={ROUTES.FORECAST} component={Forecast}/>
                 </Switch>
             </BrowserRouter>
         </div>

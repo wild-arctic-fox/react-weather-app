@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import ImgMediaCard from '../../components/card/card';
 import Form from "../../components/form-elements/form";
-import {fetchCities, fetchMatchedCities} from "../../fech/fetchCities";
-import {fetchWeather} from "../../fech/fetchWeather";
+import {fetchCities, fetchMatchedCities} from "../../fetch/fetchCities";
+import {fetchWeather} from "../../fetch/fetchWeather";
 import {API_KEY} from "../../constants/config";
 
 const Main = () => {

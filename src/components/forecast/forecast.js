@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {makeStyles} from '@material-ui/core/styles';
-import {fetchWeather} from "../../fech/fetchWeather";
+import {fetchWeather} from "../../fetch/fetchWeather";
 import {API_KEY} from "../../constants/config";
 import Container from "@material-ui/core/Container";
+import TemperatureChart from "../../charts/temp-chart";
 
 
 const useStyles = makeStyles({
@@ -14,6 +15,8 @@ const useStyles = makeStyles({
     container: {
         background: "rgba(0,0,0,0.5)",
         padding: "10px",
+        margin: "auto",
+        width: "fit-content;"
     }
 });
 
@@ -28,6 +31,7 @@ const Forecast = () => {
     ///////////////////////////////////////////////////////////////
     // States
     const [data, setData] = useState(null); // weather
+    const [statisticData, setStatisticData] = useState(null); // weather
 
     ////////////////////////////////////////////////////////////////
     // По принципу componentDidMount и componentDidUpdate:
@@ -38,6 +42,23 @@ const Forecast = () => {
                 const resJson = await fetchWeather(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
                 // set state
                 setData(resJson);
+
+                if (resJson !== null) {
+                    const statistic = [];
+                    for (let i = 5; i > 0; i--) {
+                        const d = new Date();
+                        d.setDate(d.getDate() - i);
+                        const res = await fetchWeather(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${resJson.coord.lat}&lon=${resJson.coord.lat}&dt=${Math.round(d.getTime() / 1000)}&appid=${API_KEY}&units=metric`);
+                        const date = new Date(res.hourly[12].dt * 1000).toString().slice(0, 3);
+                        statistic.push(
+                            {
+                                name: date, Temperature: res.hourly[12].temp, 'Feel like': res.hourly[12].feels_like
+                            }
+                        );
+                    }
+                    setStatisticData(statistic)
+                }
+
             } catch (e) {
                 console.log(e);
             }
@@ -72,10 +93,14 @@ const Forecast = () => {
             </Container>
         </div>);
     }
+
     return (
         <React.Fragment>
             <h1> Forecast </h1>
             {cards}
+            <Container className={classes.container}>
+                <TemperatureChart statisticData={statisticData}/>
+            </Container>
         </React.Fragment>
     );
 };

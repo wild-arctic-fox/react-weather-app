@@ -5,6 +5,7 @@ import {fetchWeather} from "../../fetch/fetchWeather";
 import {API_KEY} from "../../constants/config";
 import Container from "@material-ui/core/Container";
 import TemperatureChart from "../../charts/temp-chart";
+import Weather from "./weather";
 
 
 const useStyles = makeStyles({
@@ -67,37 +68,10 @@ const Forecast = () => {
         fetchData();
     }, []);
 
-    let cards = null;
-    if (data !== null) {
-        const {
-            name,
-            coord: {lat, lon},
-            main: {temp, feels_like, temp_min, temp_max, pressure, humidity},
-            wind: {speed}
-        } = data;
-
-        cards = (<div className={classes.root}>
-            <Container maxWidth="sm" className={classes.container}>
-                <h2>{name}</h2>
-                <h3>{data.name} is located at {lat}° N {lon}°</h3>
-                <p><b>{name} Weather Forecast. Providing a local hourly {name} weather forecast of rain, sun, wind,
-                    humidity and temperature. Forecast includes detail for {name} weather today. Live weather reports
-                    from {name} weather stations and weather warnings that include risk of thunder, high UV index and
-                    forecast gales.</b></p>
-                <h3>Real Temperature - {temp}°C</h3>
-                <h4>Feel like - {feels_like}°C</h4>
-                <pre>MIN - {temp_min}°C             MAX - {temp_max}°C</pre>
-                <h4>Wind Speed - {speed}m/sec</h4>
-                <h4>Pressure - {pressure}</h4>
-                <h4>Humidity - {humidity}%</h4>
-            </Container>
-        </div>);
-    }
-
     return (
         <React.Fragment>
             <h1> Forecast </h1>
-            {cards}
+            {data && <Weather data={data}/>}
             <Container className={classes.container}>
                 <TemperatureChart statisticData={statisticData}/>
             </Container>

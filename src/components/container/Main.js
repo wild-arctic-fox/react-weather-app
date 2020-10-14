@@ -21,34 +21,30 @@ const Main = () => {
     // По принципу componentDidMount и componentDidUpdate:
     // get cities & weather
     useEffect(() => {
-        async function fetchData() {
-            try {
-                ////////////////////////////////////////////////////////////////
-                // Get cities
-                const cities = await fetchCities('https://parseapi.back4app.com/classes/City?limit=30&keys=name,cityId');
-
-                ////////////////////////////////////////////////////////////////
-                // Get weather
-                const result = [];
-                for (let i = 0; i < cities.length; i++) {
-                    const resJson = await fetchWeather(`https://api.openweathermap.org/data/2.5/weather?q=${cities[i].name}&appid=${API_KEY}&units=metric`);
-                    if (resJson.cod !== '404') {
-                        result.push(resJson);
-                    }
-                }
-                // set state
-                setData(result);
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
         fetchData();
     }, []);
 
-    const cards = data.map((item) => {
-        return (<ImgMediaCard key={item.name} cityName={item.name} temp={item.main.temp} windSpeed={item.wind.speed}/>)
-    });
+    const fetchData = async () => {
+        try {
+            ////////////////////////////////////////////////////////////////
+            // Get cities
+            const cities = await fetchCities('https://parseapi.back4app.com/classes/City?limit=30&keys=name,cityId');
+
+            ////////////////////////////////////////////////////////////////
+            // Get weather
+            const result = [];
+            for (let i = 0; i < cities.length; i++) {
+                const resJson = await fetchWeather(`https://api.openweathermap.org/data/2.5/weather?q=${cities[i].name}&appid=${API_KEY}&units=metric`);
+                if (resJson.cod !== '404') {
+                    result.push(resJson);
+                }
+            }
+            // set state
+            setData(result);
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     ////////////////////////////////////////////////////////////////
     // Get weather by cities match

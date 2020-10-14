@@ -1,6 +1,6 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -18,10 +18,7 @@ const useStyles = makeStyles({
     },
 });
 
-const ImgMediaCard = ({cityName, windSpeed, temp}) => {
-    const classes = useStyles();
-    const history = useHistory();
-
+const chooseImg = (temp) => {
     let img;
     if (+temp >= 30) {
         img = "https://static9.depositphotos.com/1013513/1148/i/450/depositphotos_11488218-stock-photo-drought-land-and-hot-weather.jpg";
@@ -32,12 +29,16 @@ const ImgMediaCard = ({cityName, windSpeed, temp}) => {
     } else {
         img = "https://freedesignfile.com/upload/2017/05/Dark-storm-sky-with-rain-vector-background-02.jpg";
     }
+    return img;
+};
 
+const ImgMediaCard = ({cityName, windSpeed, temp}) => {
+    const classes = useStyles();
+    const history = useHistory();
 
     const showCityWeather = () => {
         history.push(`/forecast/${cityName}`);
     };
-
 
     return (
         <Card className={classes.root}>
@@ -46,7 +47,7 @@ const ImgMediaCard = ({cityName, windSpeed, temp}) => {
                     component="img"
                     alt="Contemplative Reptile"
                     height="190"
-                    image={img}
+                    image={chooseImg(temp)}
                     title="Contemplative Reptile"
                 />
                 <CardContent>

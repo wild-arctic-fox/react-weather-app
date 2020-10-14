@@ -38,35 +38,34 @@ const Forecast = () => {
     // По принципу componentDidMount и componentDidUpdate:
     // get cities & weather
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const resJson = await fetchWeather(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
-                // set state
-                setData(resJson);
-
-                if (resJson !== null) {
-                    const statistic = [];
-                    for (let i = 5; i > 0; i--) {
-                        const d = new Date();
-                        d.setDate(d.getDate() - i);
-                        const res = await fetchWeather(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${resJson.coord.lat}&lon=${resJson.coord.lat}&dt=${Math.round(d.getTime() / 1000)}&appid=${API_KEY}&units=metric`);
-                        const date = new Date(res.hourly[12].dt * 1000).toString().slice(0, 3);
-                        statistic.push(
-                            {
-                                name: date, Temperature: res.hourly[12].temp, 'Feel like': res.hourly[12].feels_like
-                            }
-                        );
-                    }
-                    setStatisticData(statistic)
-                }
-
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
         fetchData();
     }, []);
+
+    const fetchData = async () => {
+        try {
+            const resJson = await fetchWeather(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
+            // set state
+            setData(resJson);
+
+            if (resJson !== null) {
+                const statistic = [];
+                for (let i = 5; i > 0; i--) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    const res = await fetchWeather(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${resJson.coord.lat}&lon=${resJson.coord.lat}&dt=${Math.round(d.getTime() / 1000)}&appid=${API_KEY}&units=metric`);
+                    const date = new Date(res.hourly[12].dt * 1000).toString().slice(0, 3);
+                    statistic.push(
+                        {
+                            name: date, Temperature: res.hourly[12].temp, 'Feel like': res.hourly[12].feels_like
+                        }
+                    );
+                }
+                setStatisticData(statistic)
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return (
         <React.Fragment>
